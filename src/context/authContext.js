@@ -19,22 +19,42 @@ export const AuthProvider = ({ children }) => {
             if (status === "loading") return;
 
             if (session) {
-                setUser(session.user)
-                setToken("google-session")
+                try {
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google-sync`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            email: session.user.email,
+                            name: session.user.name,
+                            image: session.user.image
+                        })
+                    });
+
+                    const data = await res.json();
+
+                    if (res.ok) {
+                        setUser(data.user);
+                        setToken(data.token); 
+                        localStorage.setItem("token", data.token);
+                        localStorage.setItem("user", JSON.stringify(data.user));
+                    }
+                } catch (err) {
+                    console.error("Google Sync Error:", err);
+                }
             } else {
-                const savedToken = localStorage.getItem("token")
-                const savedUser = localStorage.getItem("user")
+                const savedToken = localStorage.getItem("token");
+                const savedUser = localStorage.getItem("user");
 
                 if (savedToken && savedUser) {
-                    setToken(savedToken)
-                    setUser(JSON.parse(savedUser))
+                    setToken(savedToken);
+                    setUser(JSON.parse(savedUser));
                 }
             }
             setLoading(false);
-        }
+        };
 
-        checkAuth()
-    }, [session, status])
+        checkAuth();
+    }, [session, status]);
 
     const login = (userData, userToken) => {
         localStorage.setItem("token", userToken);
@@ -45,7 +65,7 @@ export const AuthProvider = ({ children }) => {
 
         setToken(userToken);
         setUser(userData);
-        setLoading(false); 
+        setLoading(false);
     };
 
     const logout = async () => {

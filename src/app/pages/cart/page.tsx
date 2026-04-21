@@ -2,12 +2,12 @@
 import { useCart } from "@/context/cartContext";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-  faTrash, 
-  faArrowLeft, 
-  faBagShopping, 
-  faCalendarDays, 
-  faPlaneDeparture 
+import {
+  faTrash,
+  faArrowLeft,
+  faBagShopping,
+  faCalendarDays,
+  faPlaneDeparture
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import Navbar from "@/components/NavBar";
@@ -19,7 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function CartPage() {
   const { cart, removeFromCart, isLoading, clearCart } = useCart();
   const [isMounted, setIsMounted] = useState(false);
-  
+
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [formData, setFormData] = useState({ phone: "", notes: "" });
 
@@ -105,7 +105,7 @@ export default function CartPage() {
                 ))}
               </div>
             ) : safeCart.length === 0 ? (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="bg-white rounded-3xl md:rounded-4xl p-12 md:p-24 text-center border border-slate-100 shadow-xl"
@@ -122,12 +122,12 @@ export default function CartPage() {
               <div className="space-y-4 md:space-y-6">
                 <AnimatePresence>
                   {safeCart.map((item: any, index: number) => (
-                    <motion.div 
+                    <motion.div
                       layout
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.98 }}
-                      key={item.cart_id || index} 
+                      key={item.cart_id || index}
                       className="group bg-white border border-slate-100 rounded-3xl p-4 md:p-6 hover:shadow-lg transition-all duration-500"
                     >
                       <div className="flex flex-col sm:flex-row gap-4 md:gap-8">
@@ -155,7 +155,10 @@ export default function CartPage() {
 
                           <div className="mt-4 flex justify-between items-center pt-3 border-t border-slate-50">
                             <button
-                              onClick={() => removeFromCart(item.cart_id)}
+                              onClick={() => {
+                                console.log("Full Item:", item); 
+                                removeFromCart(item.cart_id);   
+                              }}
                               className="cursor-pointer text-red-500 hover:text-red-700 transition-colors text-[11px] md:text-xs font-bold flex items-center gap-2 uppercase tracking-wide"
                             >
                               <FontAwesomeIcon icon={faTrash} />
@@ -173,7 +176,7 @@ export default function CartPage() {
           </div>
 
           {isMounted && safeCart.length > 0 && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               className="w-full xl:w-95 xl:sticky xl:top-24"
@@ -205,7 +208,7 @@ export default function CartPage() {
                         </div>
                       </div>
 
-                      <button 
+                      <button
                         onClick={() => setIsCheckingOut(true)}
                         className="w-full bg-slate-700 cursor-pointer text-white py-4 md:py-6 rounded-2xl font-bold mt-8 md:mt-10 hover:bg-slate-900 transition-all text-sm md:text-lg shadow-lg active:scale-[0.98]"
                       >
@@ -221,39 +224,39 @@ export default function CartPage() {
                       exit={{ opacity: 0, x: -20 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <button 
+                      <button
                         onClick={() => setIsCheckingOut(false)}
                         className="mb-6 text-slate-400 hover:text-slate-900 text-xs font-bold uppercase flex items-center gap-2 transition-colors cursor-pointer"
                       >
                         <FontAwesomeIcon icon={faArrowLeft} /> Back
                       </button>
-                      
+
                       <h2 className="text-xl md:text-2xl font-bold mb-6 text-[#0A1F3E]">Contact Details</h2>
-                      
+
                       <div className="space-y-4">
                         <div>
                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Phone Number *</label>
-                          <input 
-                            type="text" 
+                          <input
+                            type="text"
                             required
                             placeholder="+995 5xx xx xx xx"
                             className="w-full bg-slate-50 border border-slate-100 p-4 rounded-xl mt-1 focus:ring-2 focus:ring-[#1264E2] outline-none transition-all text-sm font-medium"
                             value={formData.phone}
-                            onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           />
                         </div>
                         <div>
                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Special Notes</label>
-                          <textarea 
+                          <textarea
                             placeholder="Dietary needs or special requests..."
                             className="w-full bg-slate-50 border border-slate-100 p-4 rounded-xl mt-1 focus:ring-2 focus:ring-[#1264E2] outline-none transition-all h-28 text-sm font-medium resize-none"
                             value={formData.notes}
-                            onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                            onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                           />
                         </div>
                       </div>
 
-                      <button 
+                      <button
                         onClick={handleCheckout}
                         className="w-full bg-slate-700 cursor-pointer text-white py-4 md:py-6 rounded-2xl font-bold mt-8 hover:bg-slate-900 transition-all text-sm md:text-lg shadow-lg active:scale-[0.98]"
                       >

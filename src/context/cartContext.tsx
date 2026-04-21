@@ -125,27 +125,34 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCart([]);
   };
 
-  const removeFromCart = async (cartId: number) => {
-    const previousCart = [...cart];
-    setCart((prev) => prev.filter((item: any) => item.cart_id !== cartId));
+ const removeFromCart = async (cartId: number) => {
+  if (!cartId) {
+    console.error("Cart ID is missing! Received:", cartId);
+    return;
+  }
 
-    try {
-      const token = getAuthToken();
-      const res = await fetch(`${apiUrl}/cart/${cartId}`, {
-        method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` }
-      });
+  const previousCart = [...cart];
 
-      if (!res.ok) {
-        setCart(previousCart); 
-        toast.error("Could not remove item");
-      } else {
-        toast("Removed from itinerary", { icon: '🗑️' });
-      }
-    } catch (err) {
-      setCart(previousCart);
+  setCart((prev) => prev.filter((item: any) => item.cart_id !== cartId));
+
+  try {
+    const token = getAuthToken();
+    const res = await fetch(`${apiUrl}/cart/${cartId}`, {
+      method: "DELETE",
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+      setCart(previousCart); 
+      toast.error("Could not remove item");
+    } else {
+      toast("Removed from itinerary", { icon: '🗑️' });
     }
-  };
+  } catch (err) {
+    setCart(previousCart);
+    toast.error("Connection failed");
+  }
+};
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, isLoading, clearCart }}>
