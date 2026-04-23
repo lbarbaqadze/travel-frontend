@@ -66,6 +66,7 @@ export const AuthProvider = ({ children }) => {
         setToken(userToken);
         setUser(userData);
         setLoading(false);
+        window.location.href = "/";
     };
 
     const logout = async () => {
