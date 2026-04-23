@@ -16,12 +16,20 @@ export function middleware(request: NextRequest) {
   const isAdminPage = pathname.startsWith('/admin');
   const isPublicPage = pathname === '/'; 
 
+  if (pathname.includes('.') || pathname.startsWith('/_next')) {
+    return NextResponse.next();
+  }
+
   if (token && isAuthPage) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
   if (!token && !isAuthPage && !isPublicPage) {
-    return NextResponse.redirect(new URL('/pages/login', request.url));
+    const isNextDataRequest = request.headers.get('x-nextjs-data');
+
+    if (!isNextDataRequest) {
+      return NextResponse.redirect(new URL('/pages/login', request.url));
+    }
   }
 
   if (isAdminPage && userRole !== 'admin') {

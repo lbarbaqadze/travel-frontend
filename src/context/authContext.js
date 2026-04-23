@@ -35,13 +35,13 @@ export const AuthProvider = ({ children }) => {
                         setToken(data.token);
                         localStorage.setItem("token", data.token);
                         localStorage.setItem("user", JSON.stringify(data.user));
-                        document.cookie = `token=${data.token}; path=/; max-age=604800`;
-                        document.cookie = `userRole=${data.user.role}; path=/; max-age=604800`;
+                        document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
+                        document.cookie = `userRole=${data.user.role}; path=/; max-age=604800; SameSite=Lax`;
                     }
                 } catch (err) {
                     console.error("Google Sync Error:", err);
                 } finally {
-                    setLoading(false); 
+                    setLoading(false);
                 }
             } else {
                 const savedToken = localStorage.getItem("token");
@@ -60,13 +60,13 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("token", userToken);
         localStorage.setItem("user", JSON.stringify(userData));
 
-        document.cookie = `userRole=${userData.role}; path=/; max-age=604800`;
-        document.cookie = `token=${userToken}; path=/; max-age=604800`;
+        document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
+        document.cookie = `userRole=${data.user.role}; path=/; max-age=604800; SameSite=Lax`;
 
         setToken(userToken);
         setUser(userData);
         setLoading(false);
-        window.location.href = "/";
+        window.location.assign = "/";
     };
 
     const logout = async () => {
