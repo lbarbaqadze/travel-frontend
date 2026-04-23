@@ -86,6 +86,7 @@ export default function ForgotPassword() {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
+                onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full h-13 bg-gray-100 rounded-2xl px-5 outline-none"
               />
               <button
