@@ -49,19 +49,23 @@ export default function ContactSection() {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16">
 
         <div className="lg:col-span-5 space-y-6">
-          <div className="p-10 bg-blue-50 rounded-[3rem] space-y-4">
+          <div className="p-6 md:p-10 bg-blue-50 rounded-[3rem] space-y-4">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Email us</p>
-            <h3 className="text-2xl font-bold">travelagency@gmail.com</h3>
+            <h3 className="text-xl md:text-2xl font-bold break-all">
+              travelagencyinfo21@gmail.com
+            </h3>
           </div>
-
-          <div className="p-10 bg-purple-50 rounded-[3rem] space-y-4">
+          <div className="p-6 md:p-10 bg-purple-50 rounded-[3rem] space-y-4">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-400">Call us</p>
-            <h3 className="text-2xl font-bold">+995 555 555 555</h3>
+            <h3 className="text-xl md:text-2xl font-bold">
+              +995 555 555 555
+            </h3>
           </div>
-
-          <div className="p-10 bg-orange-50 rounded-[3rem] space-y-4">
+          <div className="p-6 md:p-10 bg-orange-50 rounded-[3rem] space-y-4">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-400">Visit us</p>
-            <h3 className="text-2xl font-bold">Tbilisi, Georgia <br /> Abashidze St.</h3>
+            <h3 className="text-xl md:text-2xl font-bold">
+              Tbilisi, Georgia <br /> Rustaveli Ave 12
+            </h3>
           </div>
         </div>
 
