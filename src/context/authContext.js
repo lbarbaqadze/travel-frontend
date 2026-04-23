@@ -60,13 +60,13 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("token", userToken);
         localStorage.setItem("user", JSON.stringify(userData));
 
-        document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
-        document.cookie = `userRole=${data.user.role}; path=/; max-age=604800; SameSite=Lax`;
+        document.cookie = `token=${userToken}; path=/; max-age=604800; SameSite=Lax`;
+        document.cookie = `userRole=${userData.role}; path=/; max-age=604800; SameSite=Lax`;
 
         setToken(userToken);
         setUser(userData);
         setLoading(false);
-        window.location.assign = "/";
+        window.location.href = "/";
     };
 
     const logout = async () => {

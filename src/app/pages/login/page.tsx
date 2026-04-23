@@ -37,12 +37,12 @@ export default function LoginPage() {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
                 login(data.user, data.token);
-                router.push('/');
+                router.push("/")
             } else {
                 toast.error(data.message || "Invalid data")
             }
         } catch (err) {
-            console.error("An error occurred while logging in")
+            console.error("An error occurred while logging in", err)
         }
     }
 

@@ -74,7 +74,6 @@ export default function CartPage() {
   const safeCart = Array.isArray(cart) ? cart : [];
   const subtotal = safeCart.reduce((total, item) => total + (Number(item.price) || 0), 0);
 
-  // ✅ loading-ის დროს სკელეტონი
   if (loading || !isMounted) {
     return (
       <div className="min-h-screen bg-[#F0F4F8] text-[#0A1F3E] font-sans">
@@ -88,7 +87,6 @@ export default function CartPage() {
     );
   }
 
-  // ✅ მთავარი return — loading დამთავრების შემდეგ
   return (
     <div className="min-h-screen bg-[#F0F4F8] text-[#0A1F3E] font-sans">
       <Navbar />
