@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
 
             if (session) {
                 try {
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google-sync`, {
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/google-sync`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
