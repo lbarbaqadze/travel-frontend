@@ -15,31 +15,35 @@ import Footer from "@/components/Footer";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/authContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
   const { cart, removeFromCart, isLoading, clearCart } = useCart();
   const [isMounted, setIsMounted] = useState(false);
-
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [formData, setFormData] = useState({ phone: "", notes: "" });
-
-  const { user } = useAuth();
+  const router = useRouter();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/pages/login");
+    }
+  }, [user, loading]);
 
   const handleCheckout = async () => {
     if (!user) {
       toast.error("Please authorize!");
       return;
     }
-
     if (!formData.phone) {
       toast.error("Please enter your phone number");
       return;
     }
-
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bookings`, {
         method: 'POST',
@@ -54,9 +58,7 @@ export default function CartPage() {
           cartItems: cart,
         })
       });
-
       const data = await response.json();
-
       if (response.ok) {
         toast.success("Thank you! Your tour is booked ✈️");
         clearCart();
@@ -72,6 +74,21 @@ export default function CartPage() {
   const safeCart = Array.isArray(cart) ? cart : [];
   const subtotal = safeCart.reduce((total, item) => total + (Number(item.price) || 0), 0);
 
+  // ✅ loading-ის დროს სკელეტონი
+  if (loading || !isMounted) {
+    return (
+      <div className="min-h-screen bg-[#F0F4F8] text-[#0A1F3E] font-sans">
+        <Navbar />
+        <div className="max-w-7xl mx-auto px-6 pt-40 space-y-4 animate-pulse">
+          {[1, 2].map((i) => (
+            <div key={i} className="bg-white/50 h-48 rounded-3xl" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ მთავარი return — loading დამთავრების შემდეგ
   return (
     <div className="min-h-screen bg-[#F0F4F8] text-[#0A1F3E] font-sans">
       <Navbar />
@@ -98,7 +115,7 @@ export default function CartPage() {
         <div className="flex flex-col xl:flex-row gap-6 md:gap-10">
 
           <div className="flex-3 w-full">
-            {!isMounted || isLoading ? (
+            {isLoading ? (
               <div className="space-y-4 animate-pulse">
                 {[1, 2].map((i) => (
                   <div key={i} className="bg-white/50 h-48 rounded-3xl" />
@@ -146,7 +163,6 @@ export default function CartPage() {
                               <p className="text-lg md:text-2xl font-bold text-slate-900">${Number(item.price).toLocaleString()}</p>
                             </div>
                             <p className="text-gray-400 text-[10px] md:text-xs font-black uppercase tracking-widest mb-3">Premium Experience</p>
-
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-500 text-[11px] md:text-sm font-medium border-t border-slate-50 pt-3">
                               <span className="flex items-center gap-2"><FontAwesomeIcon icon={faCalendarDays} className="text-blue-200" /> 12-Day Tour</span>
                               <span className="flex items-center gap-2"><FontAwesomeIcon icon={faBagShopping} className="text-blue-200" /> Free Cancellation</span>
@@ -155,10 +171,7 @@ export default function CartPage() {
 
                           <div className="mt-4 flex justify-between items-center pt-3 border-t border-slate-50">
                             <button
-                              onClick={() => {
-                                console.log("Full Item:", item); 
-                                removeFromCart(item.cart_id);   
-                              }}
+                              onClick={() => removeFromCart(item.cart_id)}
                               className="cursor-pointer text-red-500 hover:text-red-700 transition-colors text-[11px] md:text-xs font-bold flex items-center gap-2 uppercase tracking-wide"
                             >
                               <FontAwesomeIcon icon={faTrash} />
@@ -175,7 +188,7 @@ export default function CartPage() {
             )}
           </div>
 
-          {isMounted && safeCart.length > 0 && (
+          {safeCart.length > 0 && (
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -207,7 +220,6 @@ export default function CartPage() {
                           <span className="text-[#1264E2]">${subtotal.toLocaleString()}</span>
                         </div>
                       </div>
-
                       <button
                         onClick={() => setIsCheckingOut(true)}
                         className="w-full bg-slate-700 cursor-pointer text-white py-4 md:py-6 rounded-2xl font-bold mt-8 md:mt-10 hover:bg-slate-900 transition-all text-sm md:text-lg shadow-lg active:scale-[0.98]"
@@ -230,9 +242,7 @@ export default function CartPage() {
                       >
                         <FontAwesomeIcon icon={faArrowLeft} /> Back
                       </button>
-
                       <h2 className="text-xl md:text-2xl font-bold mb-6 text-[#0A1F3E]">Contact Details</h2>
-
                       <div className="space-y-4">
                         <div>
                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Phone Number *</label>
@@ -255,7 +265,6 @@ export default function CartPage() {
                           />
                         </div>
                       </div>
-
                       <button
                         onClick={handleCheckout}
                         className="w-full bg-slate-700 cursor-pointer text-white py-4 md:py-6 rounded-2xl font-bold mt-8 hover:bg-slate-900 transition-all text-sm md:text-lg shadow-lg active:scale-[0.98]"

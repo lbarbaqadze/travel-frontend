@@ -34,9 +34,11 @@ export const AuthProvider = ({ children }) => {
 
                     if (res.ok) {
                         setUser(data.user);
-                        setToken(data.token); 
+                        setToken(data.token);
                         localStorage.setItem("token", data.token);
                         localStorage.setItem("user", JSON.stringify(data.user));
+                        document.cookie = `token=${data.token}; path=/; max-age=604800`;
+                        document.cookie = `userRole=${data.user.role}; path=/; max-age=604800`;
                     }
                 } catch (err) {
                     console.error("Google Sync Error:", err);
