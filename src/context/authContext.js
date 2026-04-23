@@ -37,6 +37,13 @@ export const AuthProvider = ({ children }) => {
                         localStorage.setItem("user", JSON.stringify(data.user));
                         document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
                         document.cookie = `userRole=${data.user.role}; path=/; max-age=604800; SameSite=Lax`;
+
+                        const isFirstSync = !sessionStorage.getItem("synced");
+                        if (isFirstSync) {
+                            sessionStorage.setItem("synced", "true");
+                            window.location.reload();
+                        }
+
                     }
                 } catch (err) {
                     console.error("Google Sync Error:", err);
@@ -75,6 +82,8 @@ export const AuthProvider = ({ children }) => {
 
         localStorage.removeItem("token");
         localStorage.removeItem("user");
+
+        sessionStorage.removeItem("synced");
 
         setUser(null);
         setToken(null);
