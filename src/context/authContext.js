@@ -29,9 +29,7 @@ export const AuthProvider = ({ children }) => {
                             image: session.user.image
                         })
                     });
-
                     const data = await res.json();
-
                     if (res.ok) {
                         setUser(data.user);
                         setToken(data.token);
@@ -42,19 +40,19 @@ export const AuthProvider = ({ children }) => {
                     }
                 } catch (err) {
                     console.error("Google Sync Error:", err);
+                } finally {
+                    setLoading(false); 
                 }
             } else {
                 const savedToken = localStorage.getItem("token");
                 const savedUser = localStorage.getItem("user");
-
                 if (savedToken && savedUser) {
                     setToken(savedToken);
                     setUser(JSON.parse(savedUser));
                 }
+                setLoading(false);
             }
-            setLoading(false);
         };
-
         checkAuth();
     }, [session, status]);
 
